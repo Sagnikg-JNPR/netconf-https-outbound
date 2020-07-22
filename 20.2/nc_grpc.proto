@@ -1,0 +1,71 @@
+//
+// Copyright 2020, Juniper Networks, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+// Public API for the Netconf RPC services.
+
+syntax = "proto3";
+
+// This is part of the management package.
+package management;
+
+// MGD Service Definitions
+service NetconfRpcApi {
+
+    // It executes the operational commands specified in
+    // the RPCResponse. This is a streaming api
+    rpc GetExecuteCommand (stream RPCRequest) returns
+    (stream RPCResponse) {}
+
+    // It initiliazes the connection
+    rpc InitialHandShake (AuthRequest) returns
+    (AuthResponse) {}
+
+}
+
+message AuthRequest {
+    // Initial HandShake RPC request 
+    string message_req = 1;
+}
+
+message AuthResponse {
+    // Reply (message_res = "client Auth successful") when client authentication
+    // is successful
+    string message_res = 1;
+}
+
+message RPCRequest {
+
+    // The request id corresponding to the request
+    // request_id is a id attributed to the session
+    uint64 request_id = 1;
+
+    // Netconf RPC reply
+    string message  = 3;
+}
+
+message RPCResponse {
+
+    // The request id corresponding to the response
+    uint64 request_id = 1;
+
+    // Input Netconf RPC
+    // Use only netconf_command for sending netconf RPCs, Do not use 
+    // cli_command option, it is not supported in this release
+    oneof command {
+      string netconf_command = 2;
+      string cli_command = 3;
+    }
+}
