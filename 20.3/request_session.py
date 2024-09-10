@@ -23,7 +23,9 @@ def receive_data():
             data_r= s.recv(1024)
             if data_r.decode().strip() == "":
                 return
-            prGreen(data_r.decode())
+            print(data_r.decode(), end = '')
+            if data_r.decode().endswith("]]>]]>"):
+                print("")
             if data_r.decode().startswith('Client is stopping,'):
                 return
             break
@@ -35,7 +37,9 @@ def receive_data():
         data_r = s.recv(1024)
         if data_r.decode().strip() == "":
             return
-        prGreen(data_r.decode())
+        print(data_r.decode(), end = '')
+        if data_r.decode().endswith("]]>]]>"):
+            print("")
         if data_r.decode().startswith('Client is stopping,'):
             return
 
